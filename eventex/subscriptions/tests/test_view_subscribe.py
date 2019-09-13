@@ -2,6 +2,7 @@ from django.core import mail
 from django.test import TestCase
 
 from eventex.subscriptions.forms import SubscriptionsForm
+from eventex.subscriptions.models import Subscription
 
 
 class SubscribeGet(TestCase):
@@ -44,6 +45,9 @@ class SubscribePostValid(TestCase):
     def test_send_email(self):
         self.assertEquals(1, len(mail.outbox))
 
+    def test_save_subscribe(self):
+        self.assertTrue(Subscription.objects.exists())
+
 
 class SubscribePostInvalid(TestCase):
     def setUp(self):
@@ -58,6 +62,9 @@ class SubscribePostInvalid(TestCase):
     def test_has_form(self):
         form = self.response.context['form']
         self.assertIsInstance(form, SubscriptionsForm)
+
+    def test_dont_save_subscribe(self):
+        self.assertFalse(Subscription.objects.exists())
 
 
 class SubscribeMessageSuccess(TestCase):
