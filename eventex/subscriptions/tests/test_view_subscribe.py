@@ -1,3 +1,5 @@
+import unittest
+
 from django.core import mail
 from django.test import TestCase
 
@@ -40,7 +42,7 @@ class SubscribePostValid(TestCase):
         self.resp = self.client.post('/inscricao/', data)
 
     def test_post(self):
-        self.assertEquals(302, self.resp.status_code)
+        self.assertRedirects(self.resp, '/inscricao/1/')
 
     def test_send_email(self):
         self.assertEquals(1, len(mail.outbox))
@@ -65,12 +67,3 @@ class SubscribePostInvalid(TestCase):
 
     def test_dont_save_subscribe(self):
         self.assertFalse(Subscription.objects.exists())
-
-
-class SubscribeMessageSuccess(TestCase):
-    def test_message(self):
-        data = dict(name='Lucas', cpf='72324414104', email='contato@lucass.com.br', phone='61-99210-0606')
-        response = self.client.post('/inscricao/', data, follow=True)
-
-        self.assertContains(response, 'Inscrição realizada com sucesso')
-
