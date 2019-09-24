@@ -7,7 +7,7 @@ class SubscribeDetailGet(TestCase):
     def setUp(self):
         self.obj = Subscription.objects.create(
             name='Lucas Gomes de Oliveira',
-            cpf='72324414104',
+            cpf='12345678901',
             email='contato@lucass.com.br',
             phone='61-99210-0606'
         )

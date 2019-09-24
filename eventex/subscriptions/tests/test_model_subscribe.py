@@ -7,7 +7,7 @@ class Subscribe(TestCase):
     def setUp(self):
         self.obj = Subscription(
             name='Lucas Oliveiraa',
-            cpf='72324414104',
+            cpf='12345678901',
             email='lucass.web@gmail.com',
             phone='61-99210-0606'
         )
