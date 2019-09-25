@@ -1,3 +1,5 @@
+import uuid
+
 from django.conf import settings
 from django.core import mail
 from django.http import HttpResponseRedirect, Http404
@@ -21,7 +23,9 @@ def create(request):
     if not form.is_valid():
         return render(request, 'subscription_form.html', {'form': form})
 
-    subscription = Subscription.objects.create(**form.cleaned_data)
+    cleaned_data = form.cleaned_data
+    cleaned_data['uuid'] = str(uuid.uuid3(uuid.NAMESPACE_DNS, cleaned_data['cpf']))
+    subscription = Subscription.objects.create(**cleaned_data)
 
     _send_mail('Confirmação de Inscrição',
                settings.DEFAULT_FROM_EMAIL,
@@ -29,12 +33,12 @@ def create(request):
                'subscription_mail.txt',
                {'subscription': subscription})
 
-    return HttpResponseRedirect('/inscricao/{}/'.format(subscription.pk))
+    return HttpResponseRedirect('/inscricao/{}/'.format(subscription.uuid))
 
 
 def detail(request, pk):
     try:
-        subscription = Subscription.objects.get(pk=pk)
+        subscription = Subscription.objects.get(uuid=pk)
     except Subscription.DoesNotExist:
         raise Http404
 

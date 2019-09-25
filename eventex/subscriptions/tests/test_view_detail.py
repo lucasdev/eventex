@@ -1,3 +1,5 @@
+import uuid
+
 from django.test import TestCase
 
 from eventex.subscriptions.models import Subscription
@@ -9,9 +11,10 @@ class SubscribeDetailGet(TestCase):
             name='Lucas Gomes de Oliveira',
             cpf='12345678901',
             email='contato@lucass.com.br',
-            phone='61-99210-0606'
+            phone='61-99210-0606',
+            uuid=str(uuid.uuid3(uuid.NAMESPACE_DNS, '12345678901'))
         )
-        self.resp = self.client.get('/inscricao/{}/'.format(self.obj.pk))
+        self.resp = self.client.get('/inscricao/{}/'.format(self.obj.uuid))
 
     def test_get(self):
         self.assertEquals(200, self.resp.status_code)
