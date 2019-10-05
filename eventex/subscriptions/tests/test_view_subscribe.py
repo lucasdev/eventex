@@ -3,13 +3,14 @@ import uuid
 from django.core import mail
 from django.test import TestCase
 
+from django.shortcuts import resolve_url as r
 from eventex.subscriptions.forms import SubscriptionsForm
 from eventex.subscriptions.models import Subscription
 
 
 class SubscribeGet(TestCase):
     def setUp(self):
-        self.response = self.client.get('/inscricao/')
+        self.response = self.client.get(r('subscriptions:new'))
 
     def test_get(self):
         self.assertEquals(200, self.response.status_code)
@@ -39,10 +40,10 @@ class SubscribePostValid(TestCase):
     def setUp(self):
         self.data = dict(name='Lucas Gomes de Oliveira', cpf='12345678901', email='contato@lucass.com.br',
                          phone='61-99210-0606', uuid=str(uuid.uuid3(uuid.NAMESPACE_DNS, '12345678901')))
-        self.resp = self.client.post('/inscricao/', self.data)
+        self.resp = self.client.post(r('subscriptions:new'), self.data)
 
     def test_post(self):
-        self.assertRedirects(self.resp, '/inscricao/{}/'.format(self.data['uuid']))
+        self.assertRedirects(self.resp, r('subscriptions:detail', self.data['uuid']))
 
     def test_send_email(self):
         self.assertEquals(1, len(mail.outbox))
@@ -53,7 +54,7 @@ class SubscribePostValid(TestCase):
 
 class SubscribePostInvalid(TestCase):
     def setUp(self):
-        self.response = self.client.post('/inscricao/', {})
+        self.response = self.client.post(r('subscriptions:new'), {})
 
     def test_post(self):
         self.assertEquals(200, self.response.status_code)

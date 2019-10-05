@@ -3,7 +3,7 @@ import uuid
 from django.conf import settings
 from django.core import mail
 from django.http import HttpResponseRedirect, Http404
-from django.shortcuts import render
+from django.shortcuts import render, resolve_url as r
 from django.template.loader import render_to_string
 
 from eventex.subscriptions.forms import SubscriptionsForm
@@ -33,7 +33,7 @@ def create(request):
                'subscription_mail.txt',
                {'subscription': subscription})
 
-    return HttpResponseRedirect('/inscricao/{}/'.format(subscription.uuid))
+    return HttpResponseRedirect(r('subscriptions:detail', subscription.uuid))
 
 
 def detail(request, pk):
