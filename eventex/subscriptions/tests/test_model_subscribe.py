@@ -19,3 +19,6 @@ class Subscribe(TestCase):
     def test_create_at(self):
         self.assertIsInstance(self.obj.created_at, datetime)
 
+    def test_paid_default_false(self):
+        self.assertEquals(False, self.obj.paid)
+
